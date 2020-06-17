@@ -4,8 +4,6 @@
 #include <Arduino.h>
 #include <Adafruit_SSD1306.h>
 
-#include "settings.hpp"
-
 class Display {
     private:
         Adafruit_SSD1306 ssd1306;
@@ -19,8 +17,7 @@ class Display {
     public:
         Display(void);
 
-        void begin(
-        );
+        void begin(void);
 
         void update(
             const int co2_ppm,

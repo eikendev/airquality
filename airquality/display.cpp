@@ -1,4 +1,5 @@
 #include "display.hpp"
+#include "settings.hpp"
 
 #define PANIC { while (true) {}; }
 
@@ -22,17 +23,19 @@ Display::Display(void)
 
 void Display::begin(void)
 {
-    Serial.println(F("Initializing display..."));
+    Serial.println(F("Initializing display."));
 
-    while (!ssd1306.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    while (!this->ssd1306.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
         Serial.println(F("Allocation for screen buffer failed!"));
         PANIC;
     }
 
-    Serial.println(F("Resetting display..."));
-    ssd1306.clearDisplay();
-    ssd1306.setTextSize(1);
-    ssd1306.setTextColor(SSD1306_WHITE);
+    Serial.println(F("Resetting display."));
+
+    this->ssd1306.clearDisplay();
+    this->ssd1306.setTextSize(1);
+    this->ssd1306.setTextColor(SSD1306_WHITE);
+    this->ssd1306.display();
 }
 
 void Display::update(
@@ -47,7 +50,7 @@ void Display::update(
 
     this->ssd1306.clearDisplay();
     this->ssd1306.setCursor(0, 10);
-    this->print_value(F("CO2 (ppm): "), co2_ppm, is_unknown);
-    this->print_value(F("Temp. (C): "), temp_celsius, is_unknown);
+    this->print_value(F(" CO2 (ppm): "), co2_ppm, is_unknown);
+    this->print_value(F(" Temp. (C): "), temp_celsius, is_unknown);
     this->ssd1306.display();
 }
