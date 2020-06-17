@@ -13,8 +13,6 @@
 #include "display.hpp"
 #include "network.hpp"
 
-#define PANIC { while (true) {}; }
-
 #define UART_SWAP { Serial.flush(); Serial.swap(); }
 
 static const char wifi_ssid[] = WIFI_SSID;
@@ -28,7 +26,7 @@ static MQTTClient mqtt;
 
 static MHZ19 mhz19;
 
-static Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+static Display display;
 
 void setup(void)
 {
@@ -36,16 +34,7 @@ void setup(void)
 
     Wire.begin(SCREEN_SDA_PIN, SCREEN_SCL_PIN);
 
-    Serial.println(F("Initializing display..."));
-    while (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-        Serial.println(F("Allocation for screen buffer failed!"));
-        PANIC;
-    }
-
-    Serial.println(F("Resetting display..."));
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(SSD1306_WHITE);
+    display.begin();
 
     Serial.println(F("Configuring WiFi connection..."));
     WiFi.mode(WIFI_STA);
@@ -72,7 +61,7 @@ void setup(void)
     network_connect(mqtt, net);
 
     Serial.println(F("Populating display..."));
-    display_update(display, 0, 0, true);
+    display.update(0, 0, true);
 
     Serial.println(F("Initializing sensor..."));
     Serial.flush();
@@ -100,7 +89,7 @@ void loop(void)
         const int8_t temp_celsius = mhz19.getTemperature();
         UART_SWAP;
 
-        display_update(display, co2_ppm, temp_celsius, false);
+        display.update(co2_ppm, temp_celsius, false);
 
         char buffer[25];
         snprintf(buffer, sizeof(buffer), "%d", co2_ppm);
