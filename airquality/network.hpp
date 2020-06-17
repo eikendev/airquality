@@ -2,11 +2,30 @@
 #define __NETWORK_HPP__
 
 #include <Arduino.h>
+
+#include <ESP8266WiFi.h>
 #include <MQTT.h>
 
-void network_connect(
-    MQTTClient &mqtt,
-    WiFiClientSecure &net
-);
+class Network {
+    private:
+        MQTTClient mqtt;
+        WiFiClientSecure wifi;
+
+        void get_wifi_connection(void);
+
+    public:
+        Network(void);
+
+        void begin(void);
+
+        void connect(void);
+
+        void publish(
+            const unsigned int co2_ppm,
+            const int8_t temp_celsius
+        );
+
+        void serve(void);
+};
 
 #endif
