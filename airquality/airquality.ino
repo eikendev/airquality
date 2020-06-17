@@ -2,18 +2,14 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 #include <ESP8266WiFi.h>
-#include <MHZ19.h>
 #include <MQTT.h>
 
 #include "settings.hpp"
 #include "secrets.hpp"
 #include "display.hpp"
 #include "network.hpp"
-
-#define UART_SWAP { Serial.flush(); Serial.swap(); }
+#include "sensor.hpp"
 
 static const char wifi_ssid[] = WIFI_SSID;
 static const char wifi_password[] = WIFI_PASSWORD;
@@ -24,9 +20,9 @@ static WiFiClientSecure net;
 
 static MQTTClient mqtt;
 
-static MHZ19 mhz19;
-
 static Display display;
+
+static Sensor sensor;
 
 void setup(void)
 {
@@ -63,16 +59,10 @@ void setup(void)
     Serial.println(F("Populating display..."));
     display.update(0, 0, true);
 
-    Serial.println(F("Initializing sensor..."));
-    Serial.flush();
-
-    UART_SWAP;
-    mhz19.begin(Serial);
-    mhz19.autoCalibration();
-    UART_SWAP;
+    sensor.begin();
 }
 
-static unsigned long getDataTimer = 0;
+static unsigned long dataTimer = 0;
 
 void loop(void)
 {
@@ -83,20 +73,17 @@ void loop(void)
         network_connect(mqtt, net);
     }
 
-    if (millis() - getDataTimer >= SENSOR_INTERVAL) {
-        UART_SWAP;
-        const int co2_ppm = mhz19.getCO2();
-        const int8_t temp_celsius = mhz19.getTemperature();
-        UART_SWAP;
+    if (millis() - dataTimer >= SENSOR_INTERVAL) {
+        const SensorData data = sensor.fetch();
 
-        display.update(co2_ppm, temp_celsius, false);
+        display.update(data.co2, data.temperature, false);
 
         char buffer[25];
-        snprintf(buffer, sizeof(buffer), "%d", co2_ppm);
+        snprintf(buffer, sizeof(buffer), "%d", data.co2);
         mqtt.publish(F(CO2_TOPIC), buffer);
-        snprintf(buffer, sizeof(buffer), "%d", temp_celsius);
+        snprintf(buffer, sizeof(buffer), "%d", data.temperature);
         mqtt.publish(F(TEMPERATURE_TOPIC), buffer);
 
-        getDataTimer = millis();
+        dataTimer = millis();
     }
 }
