@@ -64,6 +64,11 @@ void Network::connect(void)
     Serial.println();
 }
 
+bool Network::is_connected(void)
+{
+    return this->mqtt.connected();
+}
+
 void Network::publish(
     const unsigned int co2_ppm,
     const int8_t temp_celsius
@@ -80,8 +85,4 @@ void Network::publish(
 void Network::serve(void)
 {
     this->mqtt.loop();
-
-    if (!this->mqtt.connected()) {
-        this->connect();
-    }
 }

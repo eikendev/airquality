@@ -31,6 +31,14 @@ void loop(void)
 {
     network.serve();
 
+    if (!network.is_connected()) {
+        display.reset();
+    }
+
+    while (!network.is_connected()) {
+        network.connect();
+    }
+
     if (millis() - dataTimer >= PUBLISH_INTERVAL) {
         const SensorData data = sensor.fetch();
 

@@ -20,6 +20,8 @@ class Network {
 
         void connect(void);
 
+        bool is_connected(void);
+
         void publish(
             const unsigned int co2_ppm,
             const int8_t temp_celsius
