@@ -56,9 +56,6 @@ void setup(void)
 
     network_connect(mqtt, net);
 
-    Serial.println(F("Populating display..."));
-    display.update(0, 0, true);
-
     sensor.begin();
 }
 
@@ -76,7 +73,7 @@ void loop(void)
     if (millis() - dataTimer >= SENSOR_INTERVAL) {
         const SensorData data = sensor.fetch();
 
-        display.update(data.co2, data.temperature, false);
+        display.update(data.co2, data.temperature);
 
         char buffer[25];
         snprintf(buffer, sizeof(buffer), "%d", data.co2);
