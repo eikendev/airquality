@@ -73,12 +73,17 @@ void Network::publish(
     const unsigned int co2_ppm,
     const int8_t temp_celsius
 ) {
-    char buffer[16];
+    // -2  ... Do not count '%d'.
+    // +10 ... Maximum digits for an unsigned int.
+    // +1  ... For the null terminator.
+    const size_t buffer_size = max(sizeof(TEMPERATURE_FORMAT), sizeof(CO2_FORMAT)) - 2 + 10 + 1;
 
-    snprintf(buffer, sizeof(buffer), "%d", co2_ppm);
+    char buffer[buffer_size];
+
+    snprintf(buffer, sizeof(buffer), CO2_FORMAT, co2_ppm);
     this->mqtt.publish(F(CO2_TOPIC), buffer);
 
-    snprintf(buffer, sizeof(buffer), "%d", temp_celsius);
+    snprintf(buffer, sizeof(buffer), TEMPERATURE_FORMAT, temp_celsius);
     this->mqtt.publish(F(TEMPERATURE_TOPIC), buffer);
 }
 

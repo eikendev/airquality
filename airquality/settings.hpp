@@ -1,8 +1,10 @@
 #ifndef __SETTINGS_H__
 #define __SETTINGS_H__
 
-#define CO2_TOPIC "/iot/sensor/airquality/co2"
-#define TEMPERATURE_TOPIC "/iot/sensor/airquality/temp"
+#define CO2_TOPIC "iot/sensor/airquality/co2"
+#define CO2_FORMAT "mqtt co2=%di"
+#define TEMPERATURE_TOPIC "iot/sensor/airquality/temp"
+#define TEMPERATURE_FORMAT "mqtt temperature=%di"
 
 #define PUBLISH_INTERVAL (2000)
 
