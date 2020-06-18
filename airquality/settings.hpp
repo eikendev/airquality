@@ -6,7 +6,7 @@
 #define TEMPERATURE_TOPIC "iot/sensor/airquality/temp"
 #define TEMPERATURE_FORMAT "mqtt temperature=%di"
 
-#define PUBLISH_INTERVAL (2000)
+#define PUBLISH_INTERVAL (15000)
 
 #define MAINLOOP_DELAY (100)
 
