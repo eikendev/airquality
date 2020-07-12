@@ -1,6 +1,7 @@
 #include "network.hpp"
-#include "settings.hpp"
+
 #include "secrets.hpp"
+#include "settings.hpp"
 
 static const char wifi_ssid[] = WIFI_SSID;
 static const char wifi_password[] = WIFI_PASSWORD;
@@ -10,8 +11,7 @@ static const char mqtt_client[] = MQTT_CLIENT;
 static const char mqtt_username[] = MQTT_USERNAME;
 static const char mqtt_password[] = MQTT_PASSWORD;
 
-void Network::get_wifi_connection(void)
-{
+void Network::get_wifi_connection(void) {
     Serial.print(F("Trying to establish WiFi connection..."));
 
     while (WiFi.status() != WL_CONNECTED) {
@@ -21,12 +21,9 @@ void Network::get_wifi_connection(void)
     Serial.println();
 }
 
-Network::Network(void)
-{
-}
+Network::Network(void) {}
 
-void Network::begin(void)
-{
+void Network::begin(void) {
     Serial.println(F("Configuring WiFi connection."));
 
     WiFi.mode(WIFI_STA);
@@ -35,7 +32,8 @@ void Network::begin(void)
     this->get_wifi_connection();
 
     // Check [0] for certificate validation.
-    // [0] https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/examples/BearSSL_Validation/BearSSL_Validation.ino
+    // [0]
+    // https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/examples/BearSSL_Validation/BearSSL_Validation.ino
     this->wifi.setInsecure();
 
     const bool mfln = this->wifi.probeMaxFragmentLength(mqtt_host, MQTT_PORT, NET_TLS_MFLN);
@@ -51,8 +49,7 @@ void Network::begin(void)
     this->connect();
 }
 
-void Network::connect(void)
-{
+void Network::connect(void) {
     this->get_wifi_connection();
 
     Serial.print(F("Trying to establish MQTT connection..."));
@@ -64,15 +61,9 @@ void Network::connect(void)
     Serial.println();
 }
 
-bool Network::is_connected(void)
-{
-    return this->mqtt.connected();
-}
+bool Network::is_connected(void) { return this->mqtt.connected(); }
 
-void Network::publish(
-    const unsigned int co2_ppm,
-    const int8_t temp_celsius
-) {
+void Network::publish(const unsigned int co2_ppm, const int8_t temp_celsius) {
     // -2  ... Do not count '%d'.
     // +10 ... Maximum digits for an unsigned int.
     // +1  ... For the null terminator.
@@ -87,7 +78,4 @@ void Network::publish(
     this->mqtt.publish(F(TEMPERATURE_TOPIC), buffer);
 }
 
-void Network::serve(void)
-{
-    this->mqtt.loop();
-}
+void Network::serve(void) { this->mqtt.loop(); }

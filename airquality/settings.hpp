@@ -19,8 +19,8 @@
 #define SCREEN_SDA_PIN (4)
 #define SCREEN_SCL_PIN (5)
 
-#define SENSOR_RX_PIN (13) // RX pin which the MHZ19 TX pin is attached to
-#define SENSOR_TX_PIN (15) // TX pin which the MHZ19 RX pin is attached to
+#define SENSOR_RX_PIN (13)  // RX pin which the MHZ19 TX pin is attached to
+#define SENSOR_TX_PIN (15)  // TX pin which the MHZ19 RX pin is attached to
 #define SENSOR_BAUDRATE (9600)
 
 #endif

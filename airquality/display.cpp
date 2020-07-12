@@ -1,13 +1,14 @@
 #include "display.hpp"
+
 #include "settings.hpp"
 
-#define PANIC { while (true) {}; }
+#define PANIC          \
+    {                  \
+        while (true) { \
+        };             \
+    }
 
-void Display::print_value(
-    const __FlashStringHelper *name,
-    const int value,
-    const bool is_valid
-) {
+void Display::print_value(const __FlashStringHelper *name, const int value, const bool is_valid) {
     this->ssd1306.print(name);
 
     if (is_valid)
@@ -16,12 +17,8 @@ void Display::print_value(
         this->ssd1306.println(F("-"));
 }
 
-void Display::print_values(
-    const unsigned int co2_ppm,
-    const bool co2_ppm_valid,
-    const int8_t temp_celsius,
-    const bool temp_celsius_valid
-) {
+void Display::print_values(const unsigned int co2_ppm, const bool co2_ppm_valid, const int8_t temp_celsius,
+                           const bool temp_celsius_valid) {
     this->ssd1306.clearDisplay();
     this->ssd1306.setCursor(0, 10);
 
@@ -31,13 +28,9 @@ void Display::print_values(
     this->ssd1306.display();
 }
 
-Display::Display(void)
-{
-    this->ssd1306 = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
-}
+Display::Display(void) { this->ssd1306 = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); }
 
-void Display::begin(void)
-{
+void Display::begin(void) {
     Serial.println(F("Initializing display."));
 
     while (!this->ssd1306.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -56,15 +49,9 @@ void Display::begin(void)
     this->reset();
 }
 
-void Display::reset(void)
-{
-    this->print_values(0, false, 0, false);
-}
+void Display::reset(void) { this->print_values(0, false, 0, false); }
 
-void Display::update(
-    const unsigned int co2_ppm,
-    const int8_t temp_celsius
-) {
+void Display::update(const unsigned int co2_ppm, const int8_t temp_celsius) {
     Serial.print(F("CO2 (ppm): "));
     Serial.println(co2_ppm);
     Serial.print(F("Temp. (C): "));

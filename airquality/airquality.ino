@@ -12,8 +12,7 @@ static Network network;
 
 static Sensor sensor;
 
-void setup(void)
-{
+void setup(void) {
     Serial.begin(SENSOR_BAUDRATE, SERIAL_8N1);
 
     Wire.begin(SCREEN_SDA_PIN, SCREEN_SCL_PIN);
@@ -27,8 +26,7 @@ void setup(void)
 
 static unsigned long dataTimer = 0;
 
-void loop(void)
-{
+void loop(void) {
     network.serve();
 
     if (!network.is_connected()) {

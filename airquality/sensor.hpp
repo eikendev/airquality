@@ -2,7 +2,6 @@
 #define __SENSOR_HPP__
 
 #include <Arduino.h>
-
 #include <MHZ19.h>
 
 typedef struct {
@@ -11,15 +10,15 @@ typedef struct {
 } SensorData;
 
 class Sensor {
-    private:
-        MHZ19 mhz19;
+  private:
+    MHZ19 mhz19;
 
-    public:
-        Sensor(void);
+  public:
+    Sensor(void);
 
-        void begin(void);
+    void begin(void);
 
-        SensorData fetch(void);
+    SensorData fetch(void);
 };
 
 #endif
